@@ -5,7 +5,7 @@ Basado en [Tutorial de Vrep y OpenCV-Python](https://robologs.net/2016/07/07/tut
 ## Entorno 
 
 ```bash
-python3 -m venv .venv
+virtualenv .venv
 source .venv/Scripts/activate
 pip install -r requirements.txt
 ```
