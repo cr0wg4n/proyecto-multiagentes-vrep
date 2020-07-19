@@ -1,10 +1,12 @@
-# Multiagentes (Simulación con v-rep)
+# Multiagentes (Simulación con v-rep y open-cv)
+
+Basado en el [ejemplo](https://robologs.net/2016/07/07/tutorial-de-vrep-y-opencv-python/)
 
 ## Entorno 
 
 ```bash
 python3 -m venv .venv
-source  .venv/Scripts/activate
+source .venv/Scripts/activate
 pip install -r requirements.txt
 ```
 
@@ -26,7 +28,7 @@ portIndex@_syncSimTrigger = xxxx  (true o false)
 ```
 
 ## Ejecución
-Abrir  `simulation_files/roborin.ttt` con v-rep, ejecutar la simulación, posteriormente ejecutar los scripts:
+Abrir  `simulation_files/robotin.ttt` con v-rep, ejecutar la simulación, posteriormente los scripts:
 
 ```bash
 python example/main_19997.py
