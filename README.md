@@ -1,6 +1,6 @@
 # Multiagentes (Simulación con v-rep y open-cv)
 
-Basado en el [ejemplo](https://robologs.net/2016/07/07/tutorial-de-vrep-y-opencv-python/)
+Basado en [Tutorial de Vrep y OpenCV-Python](https://robologs.net/2016/07/07/tutorial-de-vrep-y-opencv-python/)
 
 ## Entorno 
 
