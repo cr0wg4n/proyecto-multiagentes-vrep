@@ -14,8 +14,8 @@ if clientID != -1:
 else:
     sys.exit('Error!')
 
-velocity = 50
-tork = 100
+velocity = 60
+tork = 200
 _, left_motor_handle = vrep.simxGetObjectHandle(clientID, 'Pioneer_p3dx_leftMotor', vrep.simx_opmode_oneshot_wait)
 _, right_motor_handle = vrep.simxGetObjectHandle(clientID, 'Pioneer_p3dx_rightMotor', vrep.simx_opmode_oneshot_wait)
 _, camhandle = vrep.simxGetObjectHandle(clientID, 'Vision_sensor', vrep.simx_opmode_oneshot_wait)
@@ -65,22 +65,22 @@ while True:
     # s -> 115
     if key == 97:
         left()
-        time.sleep(0.050)
+        time.sleep(0.150)
         print('a')
 
     if key == 100:
         right()
-        time.sleep(0.050)
+        time.sleep(0.150)
         print('d')
 
     if key == 119:
         up()
-        time.sleep(0.050)
+        time.sleep(0.150)
         print('w')
 
     if key == 115:
         down()
-        time.sleep(0.050)
+        time.sleep(0.150)
         print('s')
     
     stop()
