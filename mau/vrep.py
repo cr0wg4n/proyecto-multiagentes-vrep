@@ -18,11 +18,8 @@ try:
     else:
         file_extension = '.so'
     libfullpath = os.path.join(os.path.dirname(__file__), 'remoteApi' + file_extension)
-    #print(libfullpath)
-    libsimx = ct.CDLL(libfullpath)#./remoteApi.dll
-
-except Exception as error:
-    print(error)
+    libsimx = ct.CDLL(libfullpath)
+except:
     print ('----------------------------------------------------')
     print ('The remoteApi library could not be loaded. Make sure')
     print ('it is located in the same folder as "vrep.py", or')

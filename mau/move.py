@@ -1,9 +1,11 @@
+import os 
 import vrep
 import sys
 import cv2
-import numpy as np
 import time
 import random
+import numpy as np
+
 vrep.simxFinish(-1)
 clientID = vrep.simxStart('127.0.0.1', 19997, True, True, 5000, 5)
 print('Client ID: ', clientID)
@@ -13,36 +15,39 @@ if clientID != -1:
 else:
     sys.exit('Error!')
 
-velocity = 60
-tork = 200
+velocity = 30
+tork = 75
+tork_rotation = 50
 _, left_motor_handle = vrep.simxGetObjectHandle(clientID, 'Pioneer_p3dx_leftMotor', vrep.simx_opmode_oneshot_wait)
 _, right_motor_handle = vrep.simxGetObjectHandle(clientID, 'Pioneer_p3dx_rightMotor', vrep.simx_opmode_oneshot_wait)
 _, camhandle = vrep.simxGetObjectHandle(clientID, 'Vision_sensor', vrep.simx_opmode_oneshot_wait)
 _, resolution, image = vrep.simxGetVisionSensorImage(clientID, camhandle, 0, vrep.simx_opmode_streaming)
 time.sleep(2)
 
-def right():
-    for i in range(tork):
+def left():
+    for i in range(tork_rotation):
         vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, -velocity, vrep.simx_opmode_streaming)
         vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, velocity, vrep.simx_opmode_streaming)
-
-def left():
-    for i in range(tork):
+        time.sleep(0.0001)
+def right():
+    for i in range(tork_rotation):
         vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, velocity, vrep.simx_opmode_streaming)
         vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, -velocity, vrep.simx_opmode_streaming)
+        time.sleep(0.0001)
 
 def up():
     for i in range(tork):
-        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, velocity, vrep.simx_opmode_streaming)
-        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, velocity, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, -velocity, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, -velocity, vrep.simx_opmode_streaming)
+        time.sleep(0.0001)
 
 def down():
     for i in range(tork):
-        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, -velocity, vrep.simx_opmode_streaming)
-        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, -velocity, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, velocity, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, velocity, vrep.simx_opmode_streaming)
+        time.sleep(0.0001)
 
 def stop():
-    for i in range(tork):
         vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, 0, vrep.simx_opmode_streaming)
         vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, 0, vrep.simx_opmode_streaming)
  
@@ -64,25 +69,22 @@ while True:
     # s -> 115
     if key == 97:
         left()
-        time.sleep(0.100)
         print('a')
 
     if key == 100:
         right()
-        time.sleep(0.100)
         print('d')
 
     if key == 119:
         up()
-        time.sleep(0.100)
         print('w')
 
     if key == 115:
         down()
-        time.sleep(0.100)
         print('s')
-    
+
     stop()
+
     if key == 27:
         cv2.destroyAllWindows()
         exit()
