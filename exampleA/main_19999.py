@@ -6,7 +6,7 @@ import time
 import random
 
 vrep.simxFinish(-1)
-clientID = vrep.simxStart('127.0.0.1', 19997, True, True, 5000, 5)
+clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)
 print('Client ID: ', clientID)
 
 if clientID != -1:
@@ -52,32 +52,27 @@ def stop():
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 
-def draw(mask,color):
-    contours,_ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+def shaped(mask,color):
+    contours,_ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     for cont in contours:
         area = cv2.contourArea(cont)
-        if area > 3000:
-            mnt = cv2.moments(cont)
-            if (mnt["m00"]==0): mnt["m00"]=1
-            x = int(mnt["m10"]/mnt["m00"])
-            y = int(mnt['m01']/mnt['m00'])
-            newContour = cv2.convexHull(cont)
-            cv2.circle(img,(x,y),7,(0,255,0),-1)
-            cv2.putText(img,'{},{}'.format(x,y),(x+10,y), font, 0.75,(0,255,0),1,cv2.LINE_AA)
-            cv2.drawContours(img, [newContour], 0, color, 3)
+        approx = cv2.approxPolyDP(cont, 0.01* cv2.arcLength(cont,True), True)#0.02
+        x = approx.ravel()[0]
+        y = approx.ravel()[1]
+        if area > 400:
+            cv2.drawContours(img, [approx], 0, (0,0,0), 5)
+            
+            if len(approx) == 3:
+                cv2.putText(img, 'Triangulo', (x,y), font, 1, (100,100,0),2)
+            elif len(approx) == 4:
+                cv2.putText(img, 'Rectangulo', (x,y), font, 1, (100,200,0),2)
+            elif 10 < len(approx):
+                cv2.putText(img, 'Circulo', (x,y), font, 1, (100,100,0),2)
 
-lightblue = np.array([100,100,20],np.uint8)
-darkblue = np.array([125,255,255],np.uint8)
-
-lightyellow = np.array([15,100,20],np.uint8)
-darkyellow = np.array([45,255,255],np.uint8)
-
-lightred1 = np.array([0,100,20],np.uint8)
-darkred1 = np.array([5,255,255],np.uint8)
-
-lightred2 = np.array([175,100,20],np.uint8)
-darkred2 = np.array([179,255,255],np.uint8)
-
+lightred1 = np.array([0,100,20])
+darkred1 = np.array([5,255,255])
+lightred2 = np.array([175,100,20])
+darkred2 = np.array([179,255,255])
 
 
 
@@ -89,20 +84,20 @@ while True:
     img = np.fliplr(img)
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-    #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    #
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    maskBlue = cv2.inRange(hsv, lightblue, darkblue)
-    maskYellow = cv2.inRange(hsv, lightyellow, darkyellow)
+    #maskBlue = cv2.inRange(hsv, lightblue, darkblue)
+    #maskYellow = cv2.inRange(hsv, lightyellow, darkyellow)
     maskRed1 = cv2.inRange(hsv, lightred1, darkred1)
     maskRed2 = cv2.inRange(hsv, lightred2, darkred2)
     maskRed = cv2.add(maskRed1, maskRed2)
-    draw(maskBlue, (255,0,0))
-    draw(maskBlue, (255,0,0))
-    draw(maskYellow, (0,255,0))
-    draw(maskRed, (0,0,255))
+    #draw(maskBlue, (255,0,0))
+    #draw(maskBlue, (255,0,0))
+    #draw(maskYellow, (0,255,0))
+    shaped(maskRed, (0,0,255))
     #img = cv2.Canny(img, 50,150)
 
-    cv2.imshow('port_19997', img)
+    cv2.imshow('port_19999', img)
     key = cv2.waitKey(1)
     # print('running', '.' * random.randint(0, 5))
 
