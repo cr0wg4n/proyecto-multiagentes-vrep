@@ -63,17 +63,22 @@ def shaped(mask,color):
             cv2.drawContours(img, [approx], 0, (0,0,0), 5)
             
             if len(approx) == 3:
-                cv2.putText(img, 'Triangulo', (x,y), font, 1, (100,100,0),2)
-            elif len(approx) == 4:
-                cv2.putText(img, 'Rectangulo', (x,y), font, 1, (100,200,0),2)
+                cv2.putText(img, 'Triangulo', (x,y), font, 1, color, 2)
+            elif len(approx) >= 4 and len(approx) <= 6:
+                cv2.putText(img, 'Rectangulo', (x,y), font, 1, color, 2)
             elif 10 < len(approx):
-                cv2.putText(img, 'Circulo', (x,y), font, 1, (100,100,0),2)
+                cv2.putText(img, 'Circulo', (x,y), font, 1, color, 2)
 
 lightred1 = np.array([0,100,20])
 darkred1 = np.array([5,255,255])
 lightred2 = np.array([175,100,20])
 darkred2 = np.array([179,255,255])
 
+lightblue = np.array([100,100,20])
+darkblue = np.array([125,255,255])
+
+lightgreen = np.array([40,50,50])
+darkgreen = np.array([80,255,255])
 
 
 while True:
@@ -86,16 +91,16 @@ while True:
 
     #
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    #maskBlue = cv2.inRange(hsv, lightblue, darkblue)
-    #maskYellow = cv2.inRange(hsv, lightyellow, darkyellow)
     maskRed1 = cv2.inRange(hsv, lightred1, darkred1)
     maskRed2 = cv2.inRange(hsv, lightred2, darkred2)
     maskRed = cv2.add(maskRed1, maskRed2)
-    #draw(maskBlue, (255,0,0))
-    #draw(maskBlue, (255,0,0))
-    #draw(maskYellow, (0,255,0))
+    maskBlue = cv2.inRange(hsv, lightblue, darkblue)
+    maskGreen = cv2.inRange(hsv, lightgreen, darkgreen)
+
     shaped(maskRed, (0,0,255))
-    #img = cv2.Canny(img, 50,150)
+    shaped(maskBlue, (255,0,0))
+    shaped(maskGreen, (0,255,0))
+    #
 
     cv2.imshow('port_19999', img)
     key = cv2.waitKey(1)

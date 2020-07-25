@@ -74,11 +74,8 @@ darkyellow = np.array([45,255,255],np.uint8)
 
 lightred1 = np.array([0,100,20],np.uint8)
 darkred1 = np.array([5,255,255],np.uint8)
-
 lightred2 = np.array([175,100,20],np.uint8)
 darkred2 = np.array([179,255,255],np.uint8)
-
-
 
 
 while True:
@@ -89,7 +86,7 @@ while True:
     img = np.fliplr(img)
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-    #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    #
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     maskBlue = cv2.inRange(hsv, lightblue, darkblue)
     maskYellow = cv2.inRange(hsv, lightyellow, darkyellow)
@@ -97,10 +94,9 @@ while True:
     maskRed2 = cv2.inRange(hsv, lightred2, darkred2)
     maskRed = cv2.add(maskRed1, maskRed2)
     draw(maskBlue, (255,0,0))
-    draw(maskBlue, (255,0,0))
     draw(maskYellow, (0,255,0))
     draw(maskRed, (0,0,255))
-    #img = cv2.Canny(img, 50,150)
+    #
 
     cv2.imshow('port_19997', img)
     key = cv2.waitKey(1)
