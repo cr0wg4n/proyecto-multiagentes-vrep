@@ -153,12 +153,12 @@ class Robot:
         rotation = self.value_rotation_to(target.position())
         rotation_y = self.rotation()[2]
         delta_rotation = rotation - rotation_y
-        self.tork_rotation = 80
-        self.velocity_rotation = 60
+        self.tork_rotation = 100
+        self.velocity_rotation = 100
         self.tork = 250
-        self.velocity = 200
+        self.velocity = 230
         if not close_to_me:
-            self.move_up()
+            # self.move_up()
             if abs(delta_rotation) > self.error * 2:
                 if delta_rotation < 0:
                     self.move_right()
@@ -185,6 +185,7 @@ class Robot:
             x = random.random() / 2
             y = random.random() / 2
             self.vrep.simxSetObjectPosition(self.client_id, self.figure_handle, endpoint_target.handle, (x, y, 0), self.vrep.simx_opmode_oneshot_wait)
+            self.figure_handle = None
             self.set_searching_velocity()
             self.searching = True
             print("ya llegue")
