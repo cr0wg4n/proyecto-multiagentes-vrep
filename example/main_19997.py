@@ -64,22 +64,22 @@ while True:
     # s -> 115
     if key == 97:
         left()
-        time.sleep(0.100)
+        time.sleep(0.150)
         print('a')
 
     if key == 100:
         right()
-        time.sleep(0.100)
+        time.sleep(0.150)
         print('d')
 
     if key == 119:
         up()
-        time.sleep(0.100)
+        time.sleep(0.150)
         print('w')
 
     if key == 115:
         down()
-        time.sleep(0.100)
+        time.sleep(0.150)
         print('s')
     
     stop()

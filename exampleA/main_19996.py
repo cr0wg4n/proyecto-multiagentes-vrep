@@ -1,4 +1,4 @@
-# RECONOCEDOR DE COLORES
+# RECONOCEDOR DE COLORES Y FIGURAS
 import vrep
 import sys
 import cv2
@@ -15,11 +15,18 @@ if clientID != -1:
 else:
     sys.exit('Error!')
 
-velocity = 40
-velocity_rotation = 30
-tork = 30
-tork_rotation = 7
+velocity = 13
+tork = 32
+tork_rotation = 8
 areas = []
+
+font = cv2.FONT_HERSHEY_SIMPLEX
+var1 = 'azul'
+var2 = 'cuad'
+redc = (0,0,255)
+bluec = (255,0,0)
+greenc = (0,255,0)
+colorf = (0,110,0)
 
 _, left_motor_handle = vrep.simxGetObjectHandle(clientID, 'Pioneer_p3dx_leftMotor', vrep.simx_opmode_oneshot_wait)
 _, right_motor_handle = vrep.simxGetObjectHandle(clientID, 'Pioneer_p3dx_rightMotor', vrep.simx_opmode_oneshot_wait)
@@ -29,14 +36,13 @@ time.sleep(2)
 
 def left():
     for i in range(tork_rotation):
-        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, -velocity_rotation, vrep.simx_opmode_streaming)
-        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, velocity_rotation, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, -velocity, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, velocity, vrep.simx_opmode_streaming)
         time.sleep(0.0001)
-
 def right():
     for i in range(tork_rotation):
-        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, velocity_rotation, vrep.simx_opmode_streaming)
-        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, -velocity_rotation, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, velocity, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, -velocity, vrep.simx_opmode_streaming)
         time.sleep(0.0001)
 
 def up():
@@ -56,48 +62,88 @@ def stop():
         vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, 0, vrep.simx_opmode_streaming)
  
 
-font = cv2.FONT_HERSHEY_SIMPLEX
-var = 'azul'
-redc = (0,0,255)
-bluec = (255,0,0)
-greenc = (0,255,0)
+
+
+def triang(x,y):
+    cv2.putText(img, 'Triangulo', (x,y), font, 1, (0,110,0), 2)
+
+def cuadr(x,y):
+    cv2.putText(img, 'Rectangulo', (x,y), font, 1, (0,110,0), 2)
+
+def circ(x,y):
+    cv2.putText(img, 'Circulo', (x,y), font, 1, (0,110,0), 2)
 
 def draw(name, mask, color):
     contours,_ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     for cont in contours:
         area = cv2.contourArea(cont)
+        approx = cv2.approxPolyDP(cont, 0.01* cv2.arcLength(cont,True), True)
+        x = approx.ravel()[0]
+        y = approx.ravel()[1]
         if area > 150:
-            mnt = cv2.moments(cont)
+            mnt = cv2.moments(approx)
             if (mnt["m00"]==0): mnt["m00"]=1
             x = int(mnt["m10"]/mnt["m00"])
             y = int(mnt['m01']/mnt['m00'])
-            newContour = cv2.convexHull(cont)
-            cv2.circle(img,(x,y),7,(0,255,0),-1)
-            if var == 'rojo':
-                rojo(x,y,newContour)
-            elif var == 'azul':
-                azul(x,y,newContour)
-            elif var == 'verde':
-                verde(x,y,newContour)
+            newContour = cv2.convexHull(approx)
+            cv2.drawContours(img, [newContour], 0, color, 3)
+            #cv2.circle(img,(x,y),7,(0,255,0),-1)
+            if var1 == 'rojo':
+                rojo(x, y, newContour)
+            elif var1 == 'azul':
+                azul(x, y, newContour)
+            elif var1 == 'verde':
+                verde(x, y, newContour)
             else:
                 continue
 
 def rojo(x,y,newContour):
     cv2.drawContours(img, [newContour], 0, redc, 3)
-    put_center(x, y, redc)
-
+    #put_center(x, y, redc)
+    if var2 == 'triang':
+        if len(newContour) == 3:
+            triang(x, y)
+    elif var2 == 'cuad':
+        if len(newContour) >= 4 and len(newContour) <= 6:
+            cuadr(x, y)
+    elif var2 == 'circ':
+        if 10 < len(newContour):
+            circ(x, y)
+    else:
+        print('Figura no valida')
 def azul(x,y,newContour):
     cv2.drawContours(img, [newContour], 0, bluec, 3)
-    put_center(x, y, bluec)
+    #put_center(x, y, bluec)
+    if var2 == 'triang':
+        if len(newContour) == 3:
+            triang(x, y)
+    elif var2 == 'cuad':
+        if len(newContour) >= 4 and len(newContour) <= 6:
+            cuadr(x, y)
+    elif var2 == 'circ':
+        if 10 < len(newContour):
+            circ(x, y)
+    else:
+        print('Figura no valida')
 
 def verde(x, y, newContour):
-    cv2.drawContours(img, [newContour], 0, greenc, 3)
-    put_center(x, y, greenc)
+    v2.drawContours(img, [newContour], 0, bluec, 3)
+    if var2 == 'triang':
+        if len(newContour) == 3:
+            triang(x,y)
+    elif var2 == 'cuad':
+        if len(newContour) >= 4 and len(newContour) <= 6:
+            cuadr(x,y)
+    elif var2 == 'circ':
+        if 10 < len(newContour):
+            circ(x,y)
+    else:
+        print('Figura no valida')
     
-def put_center(x,y,color):
-    cv2.circle(img,(x,y),7,color,-1)
-    cv2.putText(img,'{},{}'.format(x,y),(x+10,y), font, 0.75,(0,255,0),1,cv2.LINE_AA)
-    
+def put_center(x, y, color):
+    cv2.circle(img,(x,y), 7, color,-1)
+    cv2.putText(img,'{},{}'.format(x,y), (x+10,y), font, 0.75, (0,255,0), 1, cv2.LINE_AA)
+
 lightblue = np.array([100,100,20],np.uint8)
 darkblue = np.array([125,255,255],np.uint8)
 lightred1 = np.array([0,100,20],np.uint8)
@@ -132,7 +178,7 @@ def interpolation(img, area, x, y):
         else:
             pass
     else:
-        print("llege al objetivo")
+        print("llega al objetivo")
 
 
 while True:
@@ -146,27 +192,22 @@ while True:
     #
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     maskBlue = cv2.inRange(hsv, lightblue, darkblue)
-    maskGreen = cv2.inRange(hsv, lightgreen, darkgreen)
     maskRed1 = cv2.inRange(hsv, lightred1, darkred1)
     maskRed2 = cv2.inRange(hsv, lightred2, darkred2)
     maskRed = cv2.add(maskRed1, maskRed2)
+    maskGreen = cv2.inRange(hsv, lightgreen, darkgreen)
 
-    if var == 'azul':
-        draw('blue', maskBlue, (255,0,0))
-    elif var == 'verde':
+    if var1 == 'azul':
+        draw('blue',maskBlue, (255,0,0))
+    elif var1 == 'verde':
         draw('green', maskGreen, (0,255,0))
-    elif var == 'rojo':
-        draw('red', maskRed, (0,0,255))
+    elif var1 == 'rojo':
+        draw('red',maskRed, (0,0,255))
     else:
         print('Figura no valida')
         break
+    #
 
-    # Seguir a los cubos más cercanos (green, yellow, red, blue)
-    #draw('green', maskGreen, (0, 255, 0))
-    #draw('blue', maskBlue, (255,0,0))
-    #draw('yellow', maskYellow, (0,255,0))
-    #draw('red', maskRed, (0,0,255))
-    
     value = 0
     target = None
     for area in areas:
