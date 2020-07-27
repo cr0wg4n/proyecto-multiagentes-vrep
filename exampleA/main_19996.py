@@ -1,3 +1,4 @@
+# RECONOCEDOR DE COLORES Y FIGURAS
 import vrep
 import sys
 import cv2
@@ -19,11 +20,13 @@ tork = 32
 tork_rotation = 8
 areas = []
 
+font = cv2.FONT_HERSHEY_SIMPLEX
 var1 = 'azul'
 var2 = 'cuad'
 redc = (0,0,255)
 bluec = (255,0,0)
 greenc = (0,255,0)
+colorf = (0,110,0)
 
 _, left_motor_handle = vrep.simxGetObjectHandle(clientID, 'Pioneer_p3dx_leftMotor', vrep.simx_opmode_oneshot_wait)
 _, right_motor_handle = vrep.simxGetObjectHandle(clientID, 'Pioneer_p3dx_rightMotor', vrep.simx_opmode_oneshot_wait)
@@ -60,16 +63,15 @@ def stop():
  
 
 
-font = cv2.FONT_HERSHEY_SIMPLEX
 
 def triang(x,y):
-    cv2.putText(img, 'Triangulo', (x,y), font, 1, (0,0,0),2)
+    cv2.putText(img, 'Triangulo', (x,y), font, 1, (0,110,0), 2)
 
 def cuadr(x,y):
-    cv2.putText(img, 'Rectangulo', (x,y), font, 1, (0,0,0),2)
+    cv2.putText(img, 'Rectangulo', (x,y), font, 1, (0,110,0), 2)
 
 def circ(x,y):
-    cv2.putText(img, 'Circulo', (x,y), font, 1, (0,0,0),2)
+    cv2.putText(img, 'Circulo', (x,y), font, 1, (0,110,0), 2)
 
 def draw(name, mask, color):
     contours,_ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -87,11 +89,11 @@ def draw(name, mask, color):
             cv2.drawContours(img, [newContour], 0, color, 3)
             #cv2.circle(img,(x,y),7,(0,255,0),-1)
             if var1 == 'rojo':
-                rojo(x,y,newContour)
+                rojo(x, y, newContour)
             elif var1 == 'azul':
-                azul(x,y,newContour)
+                azul(x, y, newContour)
             elif var1 == 'verde':
-                verde(x,y,newContour)
+                verde(x, y, newContour)
             else:
                 continue
 
@@ -100,13 +102,13 @@ def rojo(x,y,newContour):
     #put_center(x, y, redc)
     if var2 == 'triang':
         if len(newContour) == 3:
-            triang(x,y)
+            triang(x, y)
     elif var2 == 'cuad':
         if len(newContour) >= 4 and len(newContour) <= 6:
-            cuadr(x,y)
+            cuadr(x, y)
     elif var2 == 'circ':
         if 10 < len(newContour):
-            circ(x,y)
+            circ(x, y)
     else:
         print('Figura no valida')
 def azul(x,y,newContour):
@@ -114,13 +116,13 @@ def azul(x,y,newContour):
     #put_center(x, y, bluec)
     if var2 == 'triang':
         if len(newContour) == 3:
-            triang(x,y)
+            triang(x, y)
     elif var2 == 'cuad':
         if len(newContour) >= 4 and len(newContour) <= 6:
-            cuadr(x,y)
+            cuadr(x, y)
     elif var2 == 'circ':
         if 10 < len(newContour):
-            circ(x,y)
+            circ(x, y)
     else:
         print('Figura no valida')
 
@@ -138,9 +140,9 @@ def verde(x, y, newContour):
     else:
         print('Figura no valida')
     
-def put_center(x,y,color):
-    cv2.circle(img,(x,y),7,color,-1)
-    cv2.putText(img,'{},{}'.format(x,y),(x+10,y), font, 0.75,(0,255,0),1,cv2.LINE_AA)
+def put_center(x, y, color):
+    cv2.circle(img,(x,y), 7, color,-1)
+    cv2.putText(img,'{},{}'.format(x,y), (x+10,y), font, 0.75, (0,255,0), 1, cv2.LINE_AA)
 
 lightblue = np.array([100,100,20],np.uint8)
 darkblue = np.array([125,255,255],np.uint8)
@@ -176,7 +178,7 @@ def interpolation(img, area, x, y):
         else:
             pass
     else:
-        print("llege al objetivo")
+        print("llega al objetivo")
 
 
 while True:
@@ -204,7 +206,8 @@ while True:
     else:
         print('Figura no valida')
         break
-    
+    #
+
     value = 0
     target = None
     for area in areas:

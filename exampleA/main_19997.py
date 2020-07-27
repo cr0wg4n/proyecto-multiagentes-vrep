@@ -1,3 +1,4 @@
+# RECONOCEDOR DE COLORES
 import vrep
 import sys
 import cv2
@@ -53,8 +54,11 @@ def stop():
         vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, 0, vrep.simx_opmode_streaming)
  
 
-
 font = cv2.FONT_HERSHEY_SIMPLEX
+var = 'azul'
+redc = (0,0,255)
+bluec = (255,0,0)
+greenc = (0,255,0)
 
 def draw(name, mask, color):
     contours,_ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -67,22 +71,37 @@ def draw(name, mask, color):
             y = int(mnt['m01']/mnt['m00'])
             newContour = cv2.convexHull(cont)
             cv2.circle(img,(x,y),7,(0,255,0),-1)
-            cv2.putText(img,'{},{}'.format(x,y),(x+10,y), font, 0.75,(0,255,0),1,cv2.LINE_AA)
-            cv2.drawContours(img, [newContour], 0, color, 3)
-            areas.append({'name': name, 'area': area, 'center': {'x': x, 'y': y} })
+            if var == 'rojo':
+                rojo(x,y,newContour)
+            elif var == 'azul':
+                azul(x,y,newContour)
+            elif var == 'verde':
+                verde(x,y,newContour)
+            else:
+                continue
 
+def rojo(x,y,newContour):
+    cv2.drawContours(img, [newContour], 0, redc, 3)
+    put_center(x, y, redc)
+
+def azul(x,y,newContour):
+    cv2.drawContours(img, [newContour], 0, bluec, 3)
+    put_center(x, y, bluec)
+
+def verde(x, y, newContour):
+    cv2.drawContours(img, [newContour], 0, greenc, 3)
+    put_center(x, y, greenc)
+    
+def put_center(x,y,color):
+    cv2.circle(img,(x,y),7,color,-1)
+    cv2.putText(img,'{},{}'.format(x,y),(x+10,y), font, 0.75,(0,255,0),1,cv2.LINE_AA)
+    
 lightblue = np.array([100,100,20],np.uint8)
 darkblue = np.array([125,255,255],np.uint8)
-
-lightyellow = np.array([15,100,20],np.uint8)
-darkyellow = np.array([45,255,255],np.uint8)
-
 lightred1 = np.array([0,100,20],np.uint8)
 darkred1 = np.array([5,255,255],np.uint8)
-
 lightred2 = np.array([175,100,20],np.uint8)
 darkred2 = np.array([179,255,255],np.uint8)
-
 lightgreen = np.array([57,64,55], np.uint8)
 darkgreen = np.array([77,255,255], np.uint8)
 
@@ -125,17 +144,26 @@ while True:
     #
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     maskBlue = cv2.inRange(hsv, lightblue, darkblue)
-    maskYellow = cv2.inRange(hsv, lightyellow, darkyellow)
+    maskGreen = cv2.inRange(hsv, lightgreen, darkgreen)
     maskRed1 = cv2.inRange(hsv, lightred1, darkred1)
     maskRed2 = cv2.inRange(hsv, lightred2, darkred2)
     maskRed = cv2.add(maskRed1, maskRed2)
-    maskGreen = cv2.inRange(hsv, lightgreen, darkgreen)
+
+    if var == 'azul':
+        draw('blue', maskBlue, (255,0,0))
+    elif var == 'verde':
+        draw('green', maskGreen, (0,255,0))
+    elif var == 'rojo':
+        draw('red', maskRed, (0,0,255))
+    else:
+        print('Figura no valida')
+        break
 
     # Seguir a los cubos más cercanos (green, yellow, red, blue)
-    draw('green', maskGreen, (0, 255, 0))
-    draw('blue', maskBlue, (255,0,0))
-    draw('yellow', maskYellow, (0,255,0))
-    draw('red', maskRed, (0,0,255))
+    #draw('green', maskGreen, (0, 255, 0))
+    #draw('blue', maskBlue, (255,0,0))
+    #draw('yellow', maskYellow, (0,255,0))
+    #draw('red', maskRed, (0,0,255))
     
     value = 0
     target = None
