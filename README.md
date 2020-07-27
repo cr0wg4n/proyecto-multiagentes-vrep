@@ -34,3 +34,7 @@ Abrir  `simulation_files/robotin.ttt` con v-rep, ejecutar la simulación, poster
 python example/main_19997.py
 python example/main_19998.py
 ```
+
+
+## Consideraciones
+Verificar la versión de Python instalada, remoteApi.dll debe ir de acuerdo a la versión. (32 o 64 bits respectivamente).
