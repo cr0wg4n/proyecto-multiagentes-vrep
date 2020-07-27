@@ -14,9 +14,10 @@ if clientID != -1:
 else:
     sys.exit('Error!')
 
-velocity = 13
-tork = 32
-tork_rotation = 8
+velocity = 40
+velocity_rotation = 30
+tork = 30
+tork_rotation = 7
 areas = []
 
 _, left_motor_handle = vrep.simxGetObjectHandle(clientID, 'Pioneer_p3dx_leftMotor', vrep.simx_opmode_oneshot_wait)
@@ -27,13 +28,14 @@ time.sleep(2)
 
 def left():
     for i in range(tork_rotation):
-        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, -velocity, vrep.simx_opmode_streaming)
-        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, velocity, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, -velocity_rotation, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, velocity_rotation, vrep.simx_opmode_streaming)
         time.sleep(0.0001)
+
 def right():
     for i in range(tork_rotation):
-        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, velocity, vrep.simx_opmode_streaming)
-        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, -velocity, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, left_motor_handle, velocity_rotation, vrep.simx_opmode_streaming)
+        vrep.simxSetJointTargetVelocity(clientID, right_motor_handle, -velocity_rotation, vrep.simx_opmode_streaming)
         time.sleep(0.0001)
 
 def up():
