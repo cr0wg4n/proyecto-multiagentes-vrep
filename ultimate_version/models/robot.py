@@ -104,7 +104,7 @@ class Robot:
     
     def read_prox_sensor(self):
         _, signal = self.vrep.simxGetFloatSignal(self.client_id, self.name_prox_sensor, self.vrep.simx_opmode_oneshot_wait)
-        if signal < 0.35:
+        if signal < 0.40:
             return True
         return False
     
@@ -112,7 +112,7 @@ class Robot:
         _, target = self.vrep.simxGetIntegerSignal(self.client_id, "target_"+self.name_prox_sensor, self.vrep.simx_opmode_oneshot_wait)
         return target
 
-    def interpolation(self, img, area, x, y):
+    def interpolation(self, img, area, x, y, circle=False):
         width = np.size(img, 1)
         height = np.size(img, 0)
         absolute_center_y = int(height / 2)
@@ -123,8 +123,12 @@ class Robot:
 
         if abs(delta_x) <= self.error * 2:
             delta_x = 0
-            
-        if area < ((width - self.error) * (height - self.error)):
+        
+        coeficient = 1
+        if circle:
+            coeficient = 10
+            area = area * 1.2
+        if area < ((width - (self.error * coeficient)) * (height - (self.error * coeficient))):
             if delta_x > 0:
                 self.move_left()
             elif delta_x < 0:
@@ -136,6 +140,7 @@ class Robot:
             #     print('bug')
             return False
         else:
+            print('cerca')
             if self.read_prox_sensor():
                 self.figure_handle = self.read_prox_target()
                 self.vrep.simxSetObjectPosition(self.client_id, self.figure_handle, self.payload_handle, (0,0,0), self.vrep.simx_opmode_oneshot_wait)
@@ -182,9 +187,9 @@ class Robot:
                 endpoint_target = endpoint_obj
         print(endpoint_target.name)
         if self.go_to_point(endpoint_target):
-            x = random.random() / 2
-            y = random.random() / 2
-            self.vrep.simxSetObjectPosition(self.client_id, self.figure_handle, endpoint_target.handle, (x, y, 0), self.vrep.simx_opmode_oneshot_wait)
+            x = random.random() / 8
+            y = random.random() / 8
+            self.vrep.simxSetObjectPosition(self.client_id, self.figure_handle, endpoint_target.handle, (x, y, 1), self.vrep.simx_opmode_oneshot_wait)
             self.figure_handle = None
             self.set_searching_velocity()
             self.searching = True

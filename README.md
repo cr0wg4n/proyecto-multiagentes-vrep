@@ -28,7 +28,7 @@ portIndex@_syncSimTrigger = xxxx  (true o false)
 ```
 
 ## Ejecución
-Abrir  `simulation_files/robotin.ttt` con v-rep, ejecutar la simulación, posteriormente los scripts:
+Abrir  `simulation_files/robotin_v3.ttt` con v-rep, ejecutar la simulación, posteriormente los scripts:
 
 ```bash
 python example/main_19997.py
