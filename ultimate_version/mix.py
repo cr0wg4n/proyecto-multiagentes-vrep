@@ -8,7 +8,7 @@ import random
 from models.robot import Robot
 from models.endpoint import Endpoint
 import re
-
+import socket
 
 # Ejemplo para correr programa
 
@@ -164,7 +164,7 @@ def azul(x, y, newContour, area):
         print('Figura no valida')
 
 def verde(x, y, newContour, area):
-    v2.drawContours(img, [newContour], 0, bluec, 3)
+    cv2.drawContours(img, [newContour], 0, bluec, 3)
     if var2 == 'triang':
         if len(newContour) == 3:
             triang(x, y, area)
@@ -180,6 +180,21 @@ def verde(x, y, newContour, area):
 def put_center(x, y, color):
     cv2.circle(img,(x,y), 7, color,-1)
     cv2.putText(img,'{},{}'.format(x,y), (x+10,y), font, 0.75, (0,255,0), 1, cv2.LINE_AA)
+
+try:
+    host = '127.0.0.1'
+    port1 = 6000
+    id_rob = str(robot.handle)
+    id_roboto = bytes(id_rob, 'utf-8')
+    msg = ' recogere color '+ color+' y figura '+ figura
+    msg = bytes(msg, 'utf-8')
+    s = socket.socket() 
+    s.connect((host, port1))
+    s.sendall(b'Soy el robot '+ id_roboto+ msg+ b' !')
+    print (s.recv(1024))
+    s.close()
+except:
+    pass
 
 while True:
 

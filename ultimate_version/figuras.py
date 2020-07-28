@@ -7,7 +7,7 @@ import random
 from models.robot import Robot
 from models.endpoint import Endpoint
 import re
-
+import socket
 
 # Ejemplo para correr programa
 
@@ -134,8 +134,20 @@ def cuadr(x,y):
 
 def circ(x,y):
     cv2.putText(img, 'Circulo', (x,y), font, 1, colorf, 2)
-
-
+try:
+    host = '127.0.0.1'
+    port1 = 6000
+    id_rob = str(robot.handle)
+    id_roboto = bytes(id_rob, 'utf-8')
+    msg = ' recogere figura '+ figura
+    msg = bytes(msg, 'utf-8')
+    s = socket.socket() 
+    s.connect((host, port1))
+    s.sendall(b'Soy el robot '+id_roboto+msg+b' !')
+    print (s.recv(1024))
+    s.close()
+except:
+    pass
 
 while True:
     img = robot.read_camera()
