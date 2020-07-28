@@ -1,6 +1,7 @@
 import vrep
 import sys
 import cv2
+import random
 import numpy as np
 from models.robot import Robot
 from models.endpoint import Endpoint
@@ -23,19 +24,18 @@ TORK_ROTATE_SLOW = 7
 ERROR = 3
  
 endpoints = ['Endpoint#0','Endpoint#1','Endpoint#2','Endpoint#3'] 
-endpoint_objects = []  
+areas = []
 
 vrep.simxFinish(-1)
 client_id = vrep.simxStart('127.0.0.1', 19997, True, True, 5000, 5)
 print('Client ID: ', client_id)
 
 if client_id != -1:
-    print('Connection successfull!')
+    print('Conexión exitosa!')
 else:
     sys.exit('Error!')
 
-
-areas = []
+win_name = "camera_{}".format(random.randint(1,1000))
 robot = Robot(  
                 vrep, client_id,
                 name= 'Pioneer_p3dx',
@@ -117,9 +117,9 @@ while True:
             robot.move_right()
     else:
         robot.go_to_endpoint(endpoints)
-
     areas = []
-    cv2.imshow('port_19997', img)
+
+    cv2.imshow(win_name, img)
     key = cv2.waitKey(1)
 
     # a -> 97
