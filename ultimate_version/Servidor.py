@@ -2,8 +2,8 @@ import socket
 import vrep
 import re
 from models.figura import Figure
+import sys
 
-# port for our server.
 port1 = 6000
 
 vrep.simxFinish(-1)
@@ -71,39 +71,20 @@ def robot_done_job(msg):
 
 
 # all objects
-
-# We create a socket object for the server.
 s = socket.socket()          
 print ("Servidor iniciado")
-  
-# The server listen the requests from other computers on the network.
 s.bind(('', port1))         
 print ("Puerto del servidor %s" %(port1))
-  
-# put the socket into listening mode.
 s.listen(5)      
 print ("Servidor escuchando..")
 
 lista_robots = []
-job_status = {
-   "robot_1": {
-      "figures": 3
-   },
-   "robot_123": {
-      "figures": 1
-   },
-   "robot_123": {
-      "figures": 1
-   }
-}
-
+job_status = {}
 update_db()
 while True: 
    # update_db()
-   # Wait for connection with a client. 
    c, addr = s.accept()      
    print ('Robot conectado', addr)
-   # Read the message from the client.
    client_message = c.recv(1024).decode('utf-8')
    if is_id_message(client_message):
       get_all_objects()
@@ -111,12 +92,8 @@ while True:
       robot_done_job(client_message)
 
    print(client_message,'\n')
-
    print(job_status)
-   
    # print(lista_robots)
-   # send a message to the client.
    message_to_client = 'Identifiquese robot!'
    c.sendall(message_to_client.encode())
-   # Close the socket (connection with the client)
    c.close()
