@@ -187,7 +187,11 @@ while True:
             robot.tork_rotation=TORK_ROTATE_FAST
             robot.move_right()
     else:
-        robot.go_to_endpoint(endpoints)
+        if robot.go_to_endpoint(endpoints):
+            try:
+                response = chat.send_message("#"+id_roboto+" done")
+            except:
+                pass
     areas = []
 
     cv2.imshow(win_name, img)

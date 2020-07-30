@@ -194,3 +194,5 @@ class Robot:
             self.set_searching_velocity()
             self.searching = True
             print("ya llegue")
+            return True
+        return False

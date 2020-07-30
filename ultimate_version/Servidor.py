@@ -7,7 +7,7 @@ from models.figura import Figure
 port1 = 6000
 
 vrep.simxFinish(-1)
-client_id = vrep.simxStart('192.168.1.9', 19998, True, True, 5000, 1)
+client_id = vrep.simxStart('127.0.0.1', 19998, True, True, 5000, 1)
 print('Client ID: ', client_id)
 
 if client_id != -1:
@@ -46,7 +46,7 @@ def get_all_objects():
    return res
 
 def is_id_message(msg):
-   r = re.match(r'^\#(\d+)$', msg)
+   r = re.match(r'^\#(\d+)', msg)
    if bool(r):
       return int(r.groups()[0])
    return None
@@ -85,7 +85,17 @@ s.listen(5)
 print ("Servidor escuchando..")
 
 lista_robots = []
-job_status = {}
+job_status = {
+   "robot_1": {
+      "figures": 3
+   },
+   "robot_123": {
+      "figures": 1
+   },
+   "robot_123": {
+      "figures": 1
+   }
+}
 
 update_db()
 while True: 
