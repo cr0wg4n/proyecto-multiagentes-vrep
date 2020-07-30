@@ -51,7 +51,7 @@ endpoints = ['Endpoint#0','Endpoint#1','Endpoint#2','Endpoint#3']
 areas = []
 
 vrep.simxFinish(-1)
-client_id = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)
+client_id = vrep.simxStart(str(ip), int(port), True, True, 5000, 5)
 print('Client ID: ', client_id)
 
 if client_id != -1:
@@ -146,8 +146,6 @@ try:
     response = chat.send_message("#"+id_roboto)
     print(response)
     response = chat.send_message('Soy el robot '+ id_roboto + msg+' !')
-    print(response)
-    response = chat.send_message("#"+id_roboto+" done")
     print(response)
 
 except Exception as error:
