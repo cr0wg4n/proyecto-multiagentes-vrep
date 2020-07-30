@@ -6,6 +6,7 @@ import numpy as np
 import random
 from models.robot import Robot
 from models.endpoint import Endpoint
+from models.chat import Chat
 import re
 import socket   
 
@@ -134,19 +135,22 @@ def put_center(x,y,color):
     cv2.circle(img,(x,y),7,color,-1)
     cv2.putText(img,'{},{}'.format(x,y),(x+10,y), font, 0.75,(0,255,0),1,cv2.LINE_AA)
 
+
+socket_host = '127.0.0.1'
+socket_port = 6000
+chat = Chat(socket_host, socket_port)
+id_roboto = str(robot.handle)
 try:
-    host = '127.0.0.1'
-    port1 = 6000
-    id_rob = str(robot.handle)
-    id_roboto = bytes(id_rob, 'utf-8')
     msg = ' recogere el color '+ color
-    msg = bytes(msg, 'utf-8')
-    s = socket.socket() 
-    s.connect((host, port1))
-    s.sendall(b'Soy el robot '+ id_roboto+ msg+ b' !')
-    print (s.recv(1024))
-    s.close()     
-except:
+    response = chat.send_message("#"+id_roboto)
+    print(response)
+    response = chat.send_message('Soy el robot '+ id_roboto + msg+' !')
+    print(response)
+    response = chat.send_message("#"+id_roboto+" done")
+    print(response)
+
+except Exception as error:
+    print(error)
     pass
 
 while True:

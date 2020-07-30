@@ -6,6 +6,7 @@ import numpy as np
 import random
 from models.robot import Robot
 from models.endpoint import Endpoint
+from models.chat import Chat
 import re
 import socket
 
@@ -134,19 +135,23 @@ def cuadr(x,y):
 
 def circ(x,y):
     cv2.putText(img, 'Circulo', (x,y), font, 1, colorf, 2)
+
+
+socket_host = '127.0.0.1'
+socket_port = 6000
+chat = Chat(socket_host, socket_port)
+id_roboto = str(robot.handle)
 try:
-    host = '127.0.0.1'
-    port1 = 6000
-    id_rob = str(robot.handle)
-    id_roboto = bytes(id_rob, 'utf-8')
-    msg = ' recogere figura '+ figura
-    msg = bytes(msg, 'utf-8')
-    s = socket.socket() 
-    s.connect((host, port1))
-    s.sendall(b'Soy el robot '+id_roboto+msg+b' !')
-    print (s.recv(1024))
-    s.close()
-except:
+    msg = ' recogere figura ' + figura
+    response = chat.send_message("#"+id_roboto)
+    print(response)
+    response = chat.send_message('Soy el robot '+ id_roboto + msg+' !')
+    print(response)
+    response = chat.send_message("#"+id_roboto+" done")
+    print(response)
+
+except Exception as error:
+    print(error)
     pass
 
 while True:
