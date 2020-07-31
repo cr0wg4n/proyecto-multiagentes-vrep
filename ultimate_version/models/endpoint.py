@@ -29,4 +29,3 @@ class Endpoint():
         if self.distance_between_points(target) <= 1.3:
             return True
         return False
-

@@ -119,11 +119,11 @@ def draw(name, mask, color):
             else:
                 continue
 
-def rojo(x,y,newContour):
+def rojo(x, y, newContour):
     cv2.drawContours(img, [newContour], 0, redc, 3)
     put_center(x, y, redc)
 
-def azul(x,y,newContour):
+def azul(x, y, newContour):
     cv2.drawContours(img, [newContour], 0, bluec, 3)
     put_center(x, y, bluec)
 
@@ -131,8 +131,8 @@ def verde(x, y, newContour):
     cv2.drawContours(img, [newContour], 0, greenc, 3)
     put_center(x, y, greenc)
     
-def put_center(x,y,color):
-    cv2.circle(img,(x,y),7,color,-1)
+def put_center(x, y, color):
+    cv2.circle(img, (x,y), 7, color, -1)
     cv2.putText(img,'{},{}'.format(x,y),(x+10,y), font, 0.75,(0,255,0),1,cv2.LINE_AA)
 
 
@@ -144,7 +144,7 @@ try:
     msg = ' recogere el color '+ color
     response = chat.send_message("#"+id_roboto)
     print(response)
-    response = chat.send_message('Soy el robot '+ id_roboto + msg+' !')
+    response = chat.send_message('Soy el robot '+ id_roboto + msg +' !')
     print(response)
 
 except Exception as error:
@@ -187,7 +187,7 @@ while True:
     else:
         if robot.go_to_endpoint(endpoints):
             try:
-                response = chat.send_message("#"+id_roboto+" done")
+                response = chat.send_message("#"+id_roboto+" listo")
             except:
                 pass
     areas = []
