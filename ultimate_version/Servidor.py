@@ -60,7 +60,7 @@ def add_non_repeat_list(lst, item):
    return lst
 
 def robot_done_job(msg):
-   r = re.match(r'^\#(\d+)\s?done', msg)
+   r = re.match(r'^\#(\d+)\s?listo', msg)
    if bool(r):
       _id = int(r.groups()[0])
       if not _id in lista_robots:

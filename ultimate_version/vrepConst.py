@@ -779,5 +779,3 @@ simx_error_remote_error_flag    =0x000008        # command caused an error on th
 simx_error_split_progress_flag    =0x000010        # previous similar command not yet fully processed (applies to opmode_oneshot_split operation modes) 
 simx_error_local_error_flag        =0x000020        # command caused an error on the client side 
 simx_error_initialize_error_flag        =0x000040        # simxStart was not yet called 
-
-

@@ -142,7 +142,13 @@ socket_port = 6000
 chat = Chat(socket_host, socket_port)
 id_roboto = str(robot.handle)
 try:
-    msg = ' recogere figura ' + figura
+    if figura=='cuad':
+        fig = 'cubo'
+    elif figura == 'triang':
+        fig = 'piramide'
+    else:
+        fig = 'esfera'
+    msg = ' recogere figura ' + fig
     response = chat.send_message("#"+id_roboto)
     print(response)
     response = chat.send_message('Soy el robot '+ id_roboto + msg+' !')
@@ -187,7 +193,7 @@ while True:
     else:
         if robot.go_to_endpoint(endpoints):
             try:
-                response = chat.send_message("#"+id_roboto+" done")
+                response = chat.send_message("#"+id_roboto+" listo")
             except:
                 pass
             
